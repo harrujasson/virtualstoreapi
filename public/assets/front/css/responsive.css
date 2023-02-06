@@ -1,0 +1,11 @@
+/* media-querry */
+@media screen and (max-width:767px)
+{
+    ul.navbar-nav.me-auto.mb-2.mb-lg-0 {
+        /* flex-wrap: nowrap; */
+        /* width: 100%; */
+        flex-direction: row;
+        justify-content: space-between;
+        overflow: auto;
+    }
+}
