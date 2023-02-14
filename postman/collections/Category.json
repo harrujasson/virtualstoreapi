@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "5b7c6984-0a3d-4acf-b84d-3c5dbb4626b6",
+		"name": "Category",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "11157335-5b7c6984-0a3d-4acf-b84d-3c5dbb4626b6"
+	},
+	"item": [
+		{
+			"name": "All",
+			"id": "175a30ff-9ac2-4333-b620-72efcf66af8d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/category/all",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"category",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single",
+			"id": "d91191f9-80b1-4519-8a06-2ffb3258aa96",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/category/single/main-category",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"category",
+						"single",
+						"main-category"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

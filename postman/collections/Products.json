@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "09040281-2103-409f-8a38-8db9bb312b46",
+		"name": "Products",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "11157335-09040281-2103-409f-8a38-8db9bb312b46"
+	},
+	"item": [
+		{
+			"name": "All product",
+			"id": "8be9c635-5b24-47f9-9988-eff167340f8a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/product/all?mid=1",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"product",
+						"all"
+					],
+					"query": [
+						{
+							"key": "mid",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single Product",
+			"id": "7116e5f7-7d7f-4343-9fdc-6adb77da5beb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/product/single/test-product?mid=0",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"product",
+						"single",
+						"test-product"
+					],
+					"query": [
+						{
+							"key": "mid",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product Category",
+			"id": "a029b787-3a80-4691-a98a-eddad9da02e0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/product/category/main-category?mid=0",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"product",
+						"category",
+						"main-category"
+					],
+					"query": [
+						{
+							"key": "mid",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

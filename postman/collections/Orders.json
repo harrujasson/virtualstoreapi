@@ -1,0 +1,279 @@
+{
+	"info": {
+		"_postman_id": "5acd7ef7-4d14-4ad6-90f6-b2a627f9eae7",
+		"name": "Orders",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "11157335-5acd7ef7-4d14-4ad6-90f6-b2a627f9eae7"
+	},
+	"item": [
+		{
+			"name": "All",
+			"id": "f297f290-b0e2-407d-8649-1f461efec580",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/orders/all?mid=0&payment_status=Paid",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"all"
+					],
+					"query": [
+						{
+							"key": "mid",
+							"value": "0"
+						},
+						{
+							"key": "payment_status",
+							"value": "Paid"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Single",
+			"id": "ff902e0e-fc8c-463a-8f5e-b1b30e6269e8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/orders/single/AmMy4nY2Q2N2cDZyYGOwBDNiVDN5386?mid=0",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"single",
+						"AmMy4nY2Q2N2cDZyYGOwBDNiVDN5386"
+					],
+					"query": [
+						{
+							"key": "mid",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Verify",
+			"id": "dd3f0394-acd8-4573-9db6-daa2c36aecb1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "payment_status",
+							"value": "non-paid",
+							"type": "text"
+						},
+						{
+							"key": "payment_id",
+							"value": "14",
+							"type": "text"
+						},
+						{
+							"key": "transaction_id",
+							"value": "trans-stripe-147",
+							"type": "text"
+						},
+						{
+							"key": "payment_type",
+							"value": "Loyelity",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/orders/payment-verify/AYy43Y4ETZ3IDOklDZwBDNiVDN5386",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"payment-verify",
+						"AYy43Y4ETZ3IDOklDZwBDNiVDN5386"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order Create",
+			"id": "bc8f2325-e95a-4c88-b861-7c375e11bc4e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Pass-Key",
+						"value": "34f038ad8dc5f7a35fdabd4dd13430a1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "client_id",
+							"value": "AY14XZ0QWYzI2NmJmYwBDNiVDN5386",
+							"type": "text",
+							"description": "required"
+						},
+						{
+							"key": "order_details",
+							"value": "[{\"id\":3,\"name\":\"Test Product\",\"qty\":\"4\",\"price\":90,\"options\":{\"price\":0,\"data\":\"\",\"tax\":9,\"tax_rate\":10},\"tax\":\"18.90\",\"subtotal\":\"360.00\"},{\"id\":1,\"name\":\"GENERAL PRODUCT\",\"qty\":\"1\",\"price\":100,\"options\":{\"price\":0,\"data\":\"\",\"tax\":9,\"tax_rate\":10},\"tax\":\"21.00\",\"subtotal\":\"100.00\"}]",
+							"type": "text",
+							"description": "required/ must be json_encode array"
+						},
+						{
+							"key": "total",
+							"value": "400",
+							"type": "text",
+							"description": "required"
+						},
+						{
+							"key": "tax_total",
+							"value": "20",
+							"type": "text",
+							"description": "required"
+						},
+						{
+							"key": "deliver_charge",
+							"value": "20",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "order_note",
+							"value": "Order note",
+							"description": "required",
+							"type": "text"
+						},
+						{
+							"key": "product_ship_to",
+							"value": "different",
+							"description": "required, value: 1. different 2.profile",
+							"type": "text"
+						},
+						{
+							"key": "ship",
+							"value": "1",
+							"description": "If shipping address is different from profile address",
+							"type": "text"
+						},
+						{
+							"key": "ship_name",
+							"value": "Devid m",
+							"type": "text"
+						},
+						{
+							"key": "ship_street",
+							"value": "ST.QUEEN,LINK ROAD",
+							"type": "text"
+						},
+						{
+							"key": "ship_address",
+							"value": "VIEW ENCLAVE",
+							"type": "text"
+						},
+						{
+							"key": "ship_city",
+							"value": "NY",
+							"type": "text"
+						},
+						{
+							"key": "ship_state",
+							"value": "PUNJAB",
+							"type": "text"
+						},
+						{
+							"key": "ship_country",
+							"value": "INDIA",
+							"type": "text"
+						},
+						{
+							"key": "ship_postcode",
+							"value": "147001",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://general-store.cybernauticstech-development.com/api/v1/orders/create?mid=1",
+					"protocol": "http",
+					"host": [
+						"general-store",
+						"cybernauticstech-development",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1",
+						"orders",
+						"create"
+					],
+					"query": [
+						{
+							"key": "mid",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
