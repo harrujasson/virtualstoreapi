@@ -8,11 +8,7 @@
                     <div class="row">
                         <div class="col-sm-12">
 
-                             @component('common-components.breadcrumb')
-                                 @slot('title') Starter @endslot
-                                 @slot('item1') Metrica @endslot
-                                 @slot('item2') Pages @endslot
-                                 @endcomponent
+                             
 
                         </div><!--end col-->
                     </div>

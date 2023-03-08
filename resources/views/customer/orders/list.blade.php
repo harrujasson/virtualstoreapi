@@ -55,7 +55,7 @@
             processing: true,
             serverSide: true,
             pageLength: 25,
-            ajax: '{!! route('customer.showAjaxList') !!}',
+            ajax: '{!! route('customer.showAjaxList',[get_route_url()]) !!}',
             columns: [
                 { data: 'id', name: 'id'},
                 { data: 'date', name: 'date'},

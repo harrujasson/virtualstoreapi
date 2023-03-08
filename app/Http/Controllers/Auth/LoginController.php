@@ -37,12 +37,19 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $mid;
+    public $domain;
+    public function __construct(Request $request)
     {
         $this->middleware('guest')->except('logout');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
     }
     
-    public function login(Request $request) {
+    public function login($domain,Request $request) {
         $this->validate($request, [
            'email' => 'required|string|email|max:255',
            'password' => 'required|string|min:6',
@@ -53,7 +60,7 @@ class LoginController extends Controller
 
        $email=$request->input('email');
        $password=$request->input('password');
-
+         
        $auth = Auth::attempt(
            [
                'email'  => strtolower($request->input('email')),
@@ -61,7 +68,7 @@ class LoginController extends Controller
                'status' => 1,
            ], $remember
        );
-
+       
        if($auth){
 
            if($remember){
@@ -70,17 +77,18 @@ class LoginController extends Controller
                Cookie::queue("login_password", $password);
            }
 
+           
            session_start();
            $_SESSION['user_id']=Auth::id();
-           if(Auth::user()->role=='1'){
-               return redirect(route('admin.my_profile'));
+           if(Auth::user()->role=='3'){
+               return redirect(route('admin.my_profile',[get_route_url()]));
            }elseif(Auth::user()->role=='2'){
-               return redirect(route('customer.home'));
+               return redirect(route('customer.home',[get_route_url()]));
            }
 
        }else{
            $request->session()->flash('error', 'Your email/password combination was incorrect.!');
-           return redirect(route('login'));
+           return redirect(route('login',[get_route_url()]));
        }
 
    }
@@ -118,6 +126,6 @@ class LoginController extends Controller
        Auth::logout();
        session_start();
        session_destroy();
-       return redirect(route('login'));
+       return redirect(route('login',[get_route_url()]));
    }
 }

@@ -30,7 +30,7 @@
  
             @include('widget/notifications')
 
-                <form class="form-parsley" novalidate method="post" action="{{ route('admin.category.edit_update',$r->id) }}"  enctype="multipart/form-data">
+                <form class="form-parsley" novalidate method="post" action="{{ route('admin.category.edit_update',[get_route_url(),$r->id]) }}"  enctype="multipart/form-data">
                     @csrf
 
                         <div class="row">

@@ -269,12 +269,10 @@
                                     <div data-menu="a" class="single" >
                                             <div class="item-box-wrapper" >
                                                 <div class="item-box-container">
-                                                    <div class="row justify-content-center  " >
+                                                    <div class="row justify-content-center">
                                                         @if(!empty($feature))
                                                         @foreach($feature as $product)
-                                                        @include('front.product.loop', ['product' => $product,'container'=>'col-12
-                                                        mb-lg-0 mb-4 col-md-6 col-lg-3'])
-
+                                                        @include('front.product.loop', ['product' => $product,'container'=>'col-12 mb-lg-0 mb-4 col-md-6 col-lg-3'])
                                                         @endforeach
                                                         @endif
                                                     </div>

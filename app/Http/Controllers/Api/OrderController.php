@@ -54,12 +54,19 @@ class OrderController extends Controller
         return response()->json(['success'=>$list], $this->successStatus);
     } 
 
-    function single(Request $request,$id=''){
+    function single(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id' =>'required',
+        ],  $this->message_order_errors());
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
         $mid  = 0;
         if($request->has('mid')){
-            $mid = $request->get('mid');
+            $mid = $request->input('mid');
         }
-        $id = decode($id);
+        $id = decode($request->input('id'));
         $result = Orders::where('id',$id);
         if($mid){
             $result->where('mid',$mid);
@@ -165,20 +172,21 @@ class OrderController extends Controller
         return response()->json(['success'=>"Order has been generated successfully",'order_id'=>encode($order_id)], $this->successStatus);
 
     }
-    function payment_verify(Request $request,$id=''){
+    function payment_verify(Request $request){
 
         $validator = Validator::make($request->all(), [
             'payment_status' =>'required',
             'payment_id' =>'required',
             'transaction_id' =>'required',
             'payment_type' =>'required',
+            'order_id' =>'required',
         ],  $this->message_errors());
 
         if ($validator->fails()) {
             return response()->json(['error'=>$validator->errors()], 401);
         }
 
-        $id = decode($id);
+        $id = decode($request->input('order_id'));
 
         $data['payment_status'] = $request->input('payment_status');
         $data['payment_id'] = $request->input('payment_id');
@@ -197,7 +205,8 @@ class OrderController extends Controller
             'payment_status.required'=>'Payment Status required',
             'payment_id.required'=>'Payment ID required',
             'transaction_id.required'=>'Transaction ID Required',
-            'payment_type.required'=>'Payment Type Required'
+            'payment_type.required'=>'Payment Type Required',
+            'order_id.required'=>'Order ID required'
         ];
     }
     function message_order_errors(){
@@ -208,7 +217,9 @@ class OrderController extends Controller
             'tax_total.required'=>'Tax Required',
             'deliver_charge.required'=>'Deliver charge Required',
             'order_note.required'=>'Order Note Required',
-            'product_ship_to.required'=>'Shipping Required'
+            'product_ship_to.required'=>'Shipping Required',
+            'id.required'=>'Order ID required',
+            
         ];
     }
 }

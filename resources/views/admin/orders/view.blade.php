@@ -19,7 +19,7 @@
         <div class="card">
             <div class="card-body">
             @include('widget/notifications')
-                <form class="custom-validation" novalidate autocomplete="off" method="post" action="{{ route('admin.orders.update',$r->id) }}"  enctype="multipart/form-data">
+                <form class="custom-validation" novalidate autocomplete="off" method="post" action="{{ route('admin.orders.update',[get_route_url(),$r->id]) }}"  enctype="multipart/form-data">
 
                     <div class="row">
                         <div class="col-md-4">
@@ -108,10 +108,11 @@
                                                 
                                             @else
                                             <div class="form-check form-check-warning mb-3">
+                                                
+                                                <input class="form-check-input" type="checkbox" value="1" name="cancel" id="cancelorderControl">
                                                 <label class="" for="cancelorderControl">
                                                     Yes
                                                 </label>
-                                                <input class="form-check-input" type="checkbox" id="cancelorderControl">
                                             </div>
                                             
                                             @endif
@@ -236,7 +237,7 @@
                                         @if(!empty($r->order_details))
                                         @foreach($r->order_details as $ord)
                                             <tr>
-                                                <td align="left" data-title="Product"><i><a href="{{route('admin.product.editForm',$ord->product_id)}}" target="_blank">{{$ord->product_name}}</a></i></td>
+                                                <td align="left" data-title="Product"><i><a href="{{route('admin.product.editForm',[get_route_url(),$ord->product_id])}}" target="_blank">{{$ord->product_name}}</a></i></td>
                                                 <td data-title="Price">{{number_format($ord->price,2)}}</td>
                                                 <td data-title="Qty">{{$ord->qty}}</td>
                                                 <td data-title="Discount">{{number_format($ord->discount,2)}}</td>
@@ -279,7 +280,7 @@
                     <div class="col-md-6">
 
                         <h4 class="display-8 mb-5">Order Tracking</h4>
-                        <form class="custom-validation" novalidate autocomplete="off" method="post" action="{{ route('admin.orders.track_order',$r->id) }}"  enctype="multipart/form-data">
+                        <form class="custom-validation" novalidate autocomplete="off" method="post" action="{{ route('admin.orders.track_order',[get_route_url(),$r->id]) }}"  enctype="multipart/form-data">
                             @csrf
                             <div class="row mb-4">
                                 <label class="col-sm-3">Status <code>*</code></label>
@@ -315,7 +316,7 @@
                         <div class="panel panel-info">
                             <div class="panel-body">
                                 <h4 class="display-8 mb-5">Order Tracking  Status</h4>
-                                <h4 class="display-8 mb-5">Order Tracking  Status</h4>
+                                
                                 @if(!empty($tracking))
                                 <div class="slimscroll activity-scroll">
                                     <div class="activity">

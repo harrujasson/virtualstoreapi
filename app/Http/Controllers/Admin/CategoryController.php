@@ -17,9 +17,16 @@ class CategoryController extends Controller
      * @return void
      */
     protected $common;
+    protected $mid;
+    public $domain;
     protected $title='Category';
-    public function __construct(){
+    public function __construct(Request $request){
         $this->middleware('auth');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
 
@@ -38,15 +45,15 @@ class CategoryController extends Controller
         $content['title'] = $this->title;
         return view('admin.category.list',$content);
     }
-    public function edit($id){
+    public function edit($domain, $id){
       $content['title'] = $this->title;
       $content['r']=  Category::find($id);
-      $content['main_category'] = Category::where('type','Main')->get();
+      $content['main_category'] = Category::where('mid',$this->mid)->where('type','Main')->get();
       $content['category'] = Category::where('type','Parent')->get();
       return view('admin.category.edit',$content);
     }
 
-    public function store(Request $request){
+    public function store($domain, Request $request){
 
         $request->validate([
             'name' => 'required'
@@ -63,16 +70,17 @@ class CategoryController extends Controller
         if($request->file('desktop_picture')){
             $form_data['desktop_picture']=  $this->common->fileUpload($request->file('desktop_picture'),  'uploads/category/',0 );
         }
+        $form_data['mid'] =Auth::user()->mid;
         $data = new Category($form_data);
         if($data->save()){
             $request->session()->flash('success', 'Category created successfully!');
-            return redirect(route('admin.category.create'));
+            return redirect(route('admin.category.create',[get_route_url()]));
         }else{
             $request->session()->flash('error', 'Error!');
-            return redirect(route('admin.category.create'));
+            return redirect(route('admin.category.create',[get_route_url()]));
         }
     }
-    public function update(Request $request,$id){
+    public function update($domain,Request $request,$id){
         $request->validate([
             'name' => 'required'
         ]);
@@ -98,7 +106,7 @@ class CategoryController extends Controller
     }
 
     function showList(){
-        $record = Category::query();
+        $record = Category::where('mid',Auth::user()->mid);
         return Datatables::of($record)
            ->editColumn('parent',function($record) {
                if($record->parent!=0){
@@ -137,15 +145,15 @@ class CategoryController extends Controller
                 }
             })
             ->addColumn('actions',function($record) {
-                $actions = '<a href="'. route('admin.category.editForm',$record->id).'" class="on-default"><i class="fas fa-search-plus"></i></a> &nbsp;';
-                $actions.= '<a href="javascript:void(0);" data-url="'. route('admin.category.deleteAjax',$record->id).'" class="on-default sa-warning"><i class="fas fa-trash-alt"></i></a> &nbsp;';
+                $actions = '<a href="'. route('admin.category.editForm',[get_route_url(),$record->id]).'" class="on-default"><i class="fas fa-search-plus"></i></a> &nbsp;';
+                $actions.= '<a href="javascript:void(0);" data-url="'. route('admin.category.deleteAjax',[get_route_url(),$record->id]).'" class="on-default sa-warning"><i class="fas fa-trash-alt"></i></a> &nbsp;';
                 return $actions;
             })
             ->rawColumns(['actions','status','picture'])
             ->make(true);
     }
 
-    function delete($id){
+    function delete($domain,$id){
         echo Category::where("id",$id)->delete();
         die();
     }

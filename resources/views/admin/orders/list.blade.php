@@ -25,7 +25,7 @@
                 @include('widget/notifications')
 
 
-                <form class="form-parsley" action="{{route('admin.orders.export')}}" method="get">
+                <form class="form-parsley" action="{{route('admin.orders.export',[get_route_url()])}}" method="get">
                     <div class="row"> 
                         <div class="col-4">
                             <div class="form-group">
@@ -88,7 +88,7 @@
             processing: true,
             serverSide: true,
             pageLength: 25,
-            ajax: '{!! route('admin.orders.showAjaxList') !!}',
+            ajax: '{!! route('admin.orders.showAjaxList',[get_route_url()]) !!}',
             columns: [
                 { data: 'id', name: 'id'},
                 { data: 'total', name: 'total' },

@@ -50,7 +50,7 @@
                                        </a>
                                     </li>
                                     <li class="nav-item">
-                                       <a class="nav-link" href="{{route('shop')}}">
+                                       <a class="nav-link" href="{{route('shop',[get_route_url()])}}">
                                           <div class="span-icon">
                                                 <span class="">
                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
@@ -186,20 +186,20 @@
                            <div class="header-profile-wrapper d-flex justify-content-between">
                            @if(Auth::check())
                               <div class="user-icon p-2">
-                                    <a href="{{ route('login') }}">
+                                    <a href="{{ route('login',[get_route_url()]) }}">
                                        <span>
                                           <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                                        </span>
                                     </a>
 
-                                    <a  class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                    <a  class="nav-link" href="{{ route('logout',[get_route_url()]) }}" onclick="event.preventDefault();
                                        document.getElementById('logout-form').submit();">Signout</a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('logout',[get_route_url()]) }}" method="POST" style="display: none;">
                                        {{ csrf_field() }}
                                     </form>
                               </div>
                            @else
-                           <a href="{{ route('login') }}" data-toggle="modal" data-target="#LoginModel">Sign In</a>   
+                           <a href="{{ route('login',[get_route_url()]) }}" data-toggle="modal" data-target="#LoginModel">Sign In</a>   
                            @endif   
                               <div class="header-serach">
 
@@ -208,7 +208,7 @@
                                        <i class="fa fa-search" aria-hidden="true"></i>
                                     </button>
 
-                                    <a href="{{ route('cart_list') }}" class="cart-box">
+                                    <a href="{{ route('cart_list',[get_route_url()]) }}" class="cart-box">
                                        <span class="cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
                                        <span class="count">{{ Cart::count() }}</span>
                                     </a>

@@ -1,6 +1,6 @@
 <div class="{{ $container }} {{store_available()}}">
     <div class="item-box">
-        <a href="{{route('product_show',$product->slug)}}">
+        <a href="{{route('product_show',[get_route_url(),$product->slug])}}">
         
             @if($product->ribon!="")
             <div class="product_badge">{{ $product->ribon }}</div>

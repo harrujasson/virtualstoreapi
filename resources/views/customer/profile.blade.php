@@ -20,7 +20,7 @@
             <div class="card-body">
             @include('widget/notifications')
 
-                <form class="needs-validation" novalidate method="post" action="{{ route('customer.myprofile_save') }}"  enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="post" action="{{ route('customer.myprofile_save',[get_route_url()]) }}"  enctype="multipart/form-data">
 
 
                     <div class="row">

@@ -77,7 +77,7 @@ class PaymentController extends Controller
         return view('front.payment.cancel');
     }
    
-    function beep_payment($order_id=0){
+    function beep_payment($domain,$order_id=0){
         $order_id = decode($order_id);
         $order_details = \App\Models\Orders::where('id',$order_id)->first();
         if(!empty($order_details)){
@@ -105,7 +105,7 @@ class PaymentController extends Controller
             return redirect('/');
         }
     }
-    function beep_payment_method_response(Request $request){
+    function beep_payment_method_response($domain,Request $request){
         $response = $request->all();
         //echo "<pre>"; print_r($response); die();
             if($request->has('Type')!="failure"){
@@ -120,14 +120,14 @@ class PaymentController extends Controller
                    
                     $this->payment_status_process_update($id,$payment_save,'Online');
                     \Cart::destroy();
-                    return redirect(route('payment.payment_success',$request->get('order_id')));
+                    return redirect(route('payment.payment_success',[get_route_url(),$request->get('order_id')]));
                 }else{
                     \Session::flash('error', "Payment has been failed. Plesae try after some time.");
-                    return redirect(route('payment.payment_cancel'));
+                    return redirect(route('payment.payment_cancel',[get_route_url()]));
                 }
             }else{
                 \Session::flash('error', "Payment has been failed. Plesae try after some time.");
-                return redirect(route('payment.payment_cancel'));
+                return redirect(route('payment.payment_cancel',[get_route_url()]));
             }
         }
         

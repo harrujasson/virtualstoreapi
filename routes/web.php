@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
+Route::domain('{subdomain}.cybernauticstech-development.com')->group(function () {
+
+Artisan::call('cache:clear');
+Artisan::call('route:clear');
+Artisan::call('view:clear');
+Artisan::call('config:clear');
 Auth::routes();
 
 Route::post('login',['as'=>"login",'uses'=>"App\Http\Controllers\Auth\LoginController@login"]);
@@ -22,7 +30,7 @@ Route::post('front-login',['as'=>"login_front",'uses'=>"Auth\LoginController@log
 Route::get('/',['as'=>'home','uses'=>"App\Http\Controllers\HomeController@index"]);
 Route::get('shop',['as'=>'shop','uses'=>'App\Http\Controllers\ShopController@shop']);
 Route::get('product-category/{slug}',['as'=>'category','uses'=>'App\Http\Controllers\ShopController@category_list']);
-Route::get('product/{slug}',['as'=>'product_show','uses'=>'App\Http\Controllers\ShopController@details']);
+Route::get('/product/{slug}',['as'=>'product_show','uses'=>'App\Http\Controllers\ShopController@details']);
 Route::post('review',['as'=>'review','uses'=>'App\Http\Controllers\ShopController@review']);
 Route::post('cart-add/{slug}',['as'=>'cart_add','uses'=>'App\Http\Controllers\ShopController@cart_add_details']);
 Route::get('cart',['as'=>'cart_list','uses'=>'App\Http\Controllers\ShopController@cart_list']);
@@ -50,9 +58,9 @@ Route::group(['prefix'=>'payment','as'=>'payment.'],function(){
     Route::get('payment-success/{id}',['as'=>'payment_success','uses'=>'App\Http\Controllers\PaymentController@success']);
 });
 Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware'=>['auth','admin']], function () {
-
+   
     Route::get('home', ['as'=>'home', 'uses'=>'App\Http\Controllers\Admin\HomeController@index']);
-    Route::get('my-porfile', ['as'=>'my_profile', 'uses'=>'App\Http\Controllers\Admin\HomeController@profile']);
+    Route::get('my-profile', ['as'=>'my_profile', 'uses'=>'App\Http\Controllers\Admin\HomeController@profile']);
     Route::post('my-profile', ['as'=>'my_profile_save', 'uses'=>'App\Http\Controllers\Admin\HomeController@my_profile_save']);
 
     Route::get('config', ['as'=>'config', 'uses'=>'App\Http\Controllers\Admin\HomeController@config']);
@@ -102,12 +110,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.','middleware'=>['auth','admin
         Route::get('publish-review/{id}/{approve}',['as'=>'publish_review','uses'=>'App\Http\Controllers\Admin\ProductController@publish']);
 
         /*Attribute load*/
-        Route::post('attribute-load',['as'=>'attribute_load','uses'=>'Admin\ProductController@attribute_load']);
-        Route::post('attribute-load-edit',['as'=>'attribute_load_edit','uses'=>'Admin\ProductController@attribute_load_exist']);
-        Route::post('import-product',['as'=>'import_product','uses'=>'Admin\ProductController@import_product']);
-        Route::get('import-product-gallery/{filename}',['as'=>'import_product_gallery','uses'=>'Admin\ProductController@import_product_gallery']);
+        Route::post('attribute-load',['as'=>'attribute_load','uses'=>'App\Http\Controllers\Admin\ProductController@attribute_load']);
+        Route::post('attribute-load-edit',['as'=>'attribute_load_edit','uses'=>'App\Http\Controllers\Admin\ProductController@attribute_load_exist']);
+        Route::post('import-product',['as'=>'import_product','uses'=>'App\Http\Controllers\Admin\ProductController@import_product']);
+        Route::get('import-product-gallery/{filename}',['as'=>'import_product_gallery','uses'=>'App\Http\Controllers\Admin\ProductController@import_product_gallery']);
 
-        Route::get('import-product',['as'=>'import_product_get','uses'=>'Admin\ProductController@import_product']);
+        Route::get('import-product',['as'=>'import_product_get','uses'=>'App\Http\Controllers\Admin\ProductController@import_product']);
     });
 
     /*Tax*/
@@ -175,3 +183,9 @@ Route::group(['prefix' => 'ajax', 'as' => 'ajax.'], function () {
 });
 Route::get('get-parent-category','App\Http\Controllers\Admin\CategoryController@get_category')->name('get_prent_category');
 
+//Route::group(['domain' => '{subdomain}.cybernauticstech-development.com'], function() {
+//Route::group(['domain' => '{subdomain}.cybernauticstech-development.com'], function() {
+    Route::get('/testdomain','App\Http\Controllers\HomeController@testdomains')->name('testdomains');
+    
+    Route::get('/cstusers/{id}','App\Http\Controllers\HomeController@testdomain')->name('testdomain');
+});

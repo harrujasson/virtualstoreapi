@@ -12,32 +12,11 @@
 @endsection
 @section('content')
 <!-- breadcrumb-area -->
-<!-- <div class="breadcrumb-area breadcrumb-style-two"
-    data-background="{{asset('assets/front/img/bg/s_breadcrumb_bg01.jpg')}}">
 
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-sm-12 col-md-3 col-lg-3 d-none d-lg-block">
-            </div>
-            <div class="col-12 col-sm-12 ">
-                <div class="breadcrumb-content">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
-            <div class="col-12 col-sm-12 col-md-3 col-lg-3 d-none d-lg-block">
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <!-- breadcrumb-area-end -->
 @if(configinfo('status'))
-<form method="post" action="{{route('cart_add',$r->slug)}}" class="num-block product_cart_main">
+<form method="post" action="{{route('cart_add',[get_route_url(),$r->slug])}}" class="num-block product_cart_main">
 @else
 <form method="post" action="#" class="num-block product_cart_main">
 @endif
@@ -48,11 +27,11 @@
             <div class="product-details-share">
                 <ul>
                     <li>Share:</li>
-                    <li><a href="https://www.facebook.com/sharer/sharer.php?u={{route('home')}}" target="_blank"><i
+                    <li><a href="https://www.facebook.com/sharer/sharer.php?u={{route('home',[get_route_url()])}}" target="_blank"><i
                                 class="fab fa-facebook-f"></i></a></li>
-                    <li><a href="https://www.twitter.com/sharer/sharer.php?u={{route('home')}}" target="_blank"><i
+                    <li><a href="https://www.twitter.com/sharer/sharer.php?u={{route('home',[get_route_url()])}}" target="_blank"><i
                                 class="fab fa-twitter"></i></a></li>
-                    <li><a href="https://www.pinterest.com/sharer/sharer.php?u={{route('home')}}" target="_blank"><i
+                    <li><a href="https://www.pinterest.com/sharer/sharer.php?u={{route('home',[get_route_url()])}}" target="_blank"><i
                                 class="fab fa-pinterest-p"></i></a></li>
                 </ul>
             </div>
@@ -146,7 +125,7 @@
                 </div>
                 <div class="col-lg-5 mb-lg-0 mb-4">
                     @include('widget/notifications')
-                    <form method="post" action="{{route('product_show',$r->slug)}}" class="num-block">
+                    <form method="post" action="{{route('product_show',[get_route_url(),$r->slug])}}" class="num-block">
                         <div class="shop-details-content">
                             <a href="javascript:void(0);" class="product-cat">{{$cat_info}}</a>
                             <h3 class="title mb-0">{{$r->title}}</h3>
@@ -319,7 +298,7 @@
                                                                     class="form-control">
                                                                 @if (Route::has('password.request'))
                                                                 <p class="mt-3 forgot-pswd"><a
-                                                                        href="{{ route('password.request') }}">Forgot
+                                                                        href="{{ route('password.request',[get_route_url()]) }}">Forgot
                                                                         Password?</a></p>
                                                                 @endif
                                                             </div>
@@ -328,7 +307,7 @@
                                                                     <div class="form_submit_buttons">
                                                                         <button type="submit"
                                                                             class="btn btn-md btn-success">Login</button>
-                                                                        <a href="{{route('register')}}"
+                                                                        <a href="{{route('register',[get_route_url()])}}"
                                                                             class="btn btn-md btn-secondary">Sign
                                                                             Up</a>
                                                                     </div>

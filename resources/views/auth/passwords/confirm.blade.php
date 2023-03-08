@@ -19,7 +19,7 @@
                                         <p class="text-muted mb-0">{{ __('Please confirm your password before continuing.') }}</p>  
                                     </div> <!--end auth-logo-text-->  
                                     
-                    <form method="POST" class="form-horizontal auth-form my-4" action="{{ route('password.confirm') }}">
+                    <form method="POST" class="form-horizontal auth-form my-4" action="{{ route('password.confirm',[get_route_url()]) }}">
                         @csrf
                                         <div class="form-group">
                                             <label for="username">Password</label>
@@ -48,7 +48,7 @@
                                 
                                 <div class="m-3 text-center text-muted">
                                      @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    <a class="btn btn-link" href="{{ route('password.request',[get_route_url()]) }}">
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif

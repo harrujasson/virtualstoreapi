@@ -16,7 +16,7 @@
                                         <h4 class="mt-0 mb-3 mt-5">Reset Password</h4> 
                                     </div> <!--end auth-logo-text-->  
                                     
-                            <form method="POST" action="{{ route('password.update') }}">
+                            <form method="POST" action="{{ route('password.update',[get_route_url()]) }}">
                                 @csrf
 
                                   <input type="hidden" name="token" value="{{ $token }}">
@@ -75,7 +75,7 @@
                                 </div><!--end /div-->
                                 
                                 <div class="m-3 text-center text-muted">
-                                    <p class="">Don't have an account ?  <a href="{{ route('register') }}" class="text-primary ml-2">Free Register</a></p>
+                                    <p class="">Don't have an account ?  <a href="{{ route('register',[get_route_url()]) }}" class="text-primary ml-2">Free Register</a></p>
                                 </div>
                             </div><!--end card-body-->
                         </div><!--end card-->

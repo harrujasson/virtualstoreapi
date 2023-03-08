@@ -30,7 +30,7 @@
  
             @include('widget/notifications')
 
-                <form class="form-parsley" novalidate method="post" action="{{ route('admin.tax.create') }}"  enctype="multipart/form-data">
+                <form class="form-parsley" novalidate method="post" action="{{ route('admin.tax.create',[get_route_url()]) }}"  enctype="multipart/form-data">
 
                     @csrf
                     <div class="row">

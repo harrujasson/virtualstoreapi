@@ -31,7 +31,7 @@
  
             @include('widget/notifications')
 
-                <form class="form-parsley" novalidate method="post" action="{{ route('admin.product.create') }}"  enctype="multipart/form-data">
+                <form class="form-parsley" novalidate method="post" action="{{ route('admin.product.create',[get_route_url()]) }}"  enctype="multipart/form-data">
 
                     <div class="card">
                         <div class="card-body">

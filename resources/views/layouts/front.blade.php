@@ -52,13 +52,11 @@
                         <div class="form_group">
                            <label>Password</label>
                            <input type="Password" id="Password" name="password" placeholder="Enter Your Password" required><br>
-                           @if (Route::has('password.request'))
-                           <p><a href="{{ route('password.request') }}">Forgot Password?</a></p>
-                           @endif
+                           
                         </div>
                         <div class="form_group form_submit_buttons">
                            <button type="submit" class="btn btn-md">Login</button>
-                           <a href="{{route('register')}}">Sign Up</a>
+                           <a href="{{route('register',[get_route_url()])}}">Sign Up</a>
                         </div>
                      </form>
                   </div>
@@ -70,7 +68,7 @@
     <!--End Model Login-Form--> 
 
     <!---------Search popup--------------------->
-   <form method="get" action="{{route('shop')}}">
+   <form method="get" action="{{route('shop',[get_route_url()])}}">
       <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
          <div class="modal-dialog" role="document">
             <div class="modal-content">

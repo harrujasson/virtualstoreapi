@@ -30,7 +30,7 @@
  
             @include('widget/notifications')
 
-                <form class="needs-validation" novalidate method="post" action="{{ route('admin.config_save') }}"  enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="post" action="{{ route('admin.config_save',[get_route_url()]) }}"  enctype="multipart/form-data">
 
                 @csrf
                     <div class="row">

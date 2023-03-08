@@ -18,7 +18,7 @@
                                         <p class="text-muted mb-0">Get your free Metrica account now.</p>  
                                     </div> <!--end auth-logo-text-->  
     
-                                    <form class="form-horizontal auth-form my-4" method="POST" action="{{ route('register') }}">
+                                    <form class="form-horizontal auth-form my-4" method="POST" action="{{ route('register',[get_route_url()]) }}">
             
                                      @csrf
                                         <div class="form-group">
@@ -101,7 +101,7 @@
                                 </div><!--end /div-->
                                 
                                 <div class="m-3 text-center text-muted">
-                                    <p class="">Already have an account ? <a href="{{ route('login') }}" class="text-primary ml-2">Log in</a></p>
+                                    <p class="">Already have an account ? <a href="{{ route('login',[get_route_url()]) }}" class="text-primary ml-2">Log in</a></p>
                                 </div>
                             </div><!--end card-body-->
                         </div><!--end card-->

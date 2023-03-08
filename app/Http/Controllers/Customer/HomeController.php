@@ -22,8 +22,15 @@ class HomeController extends Controller
      */
     protected $common;
     protected $title='Orders';
-    public function __construct(){
+    protected $mid;
+    public $domain;
+    public function __construct(Request $request){
         $this->middleware('auth');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
 
@@ -39,7 +46,7 @@ class HomeController extends Controller
         $content['r'] = User::where('id',Auth::id())->first();
         return view('customer.profile',$content);
     }
-    function myprofile_save(Request $request){
+    function myprofile_save($domain,Request $request){
 
         $request->validate([
             'name' => 'bail|required',
@@ -67,7 +74,7 @@ class HomeController extends Controller
         $data['title'] = $this->title; 
         return view('customer.orders.list',$data);
     }
-    function order_show($id){
+    function order_show($domain,$id){
         $content['title'] = $this->title; 
         $content['r'] = \App\Models\Orders::with(['order_details','shipping','user'])->where('id',$id)->where('user_id',Auth::id())->first();
         $content['tracking'] = \App\Models\TrackOrder::where('item_id',$id)->where('type','Order')->where('post_by','Admin')->get();
@@ -84,6 +91,7 @@ class HomeController extends Controller
             ->editColumn('total',function($record) {
                    return currency().' '. number_format( $record->total,2 );
              })
+            
             ->editColumn('payment_status',function($record) {
                 if($record->payment_status =="non-paid"){
                     return "<span class='badge badge-pill badge-soft-danger font-size-12'>Pending</span>";
@@ -92,21 +100,27 @@ class HomeController extends Controller
                 }
             })
             ->editColumn('status',function($record) {
-                if($record->status!=''){
-                    return "<span class='badge badge-pill badge-soft-success font-size-12'>".$record->status."</span>";
+                if($record->cancel =="1"){
+                    return "<span class='badge badge-pill badge-soft-danger font-size-12'>Cacnelled</span>";
                 }else{
-                    return  "<span class='badge badge-pill badge-soft-warning font-size-12'>Under Process</span>";
+
+                    if($record->status!=''){
+                        return "<span class='badge badge-pill badge-soft-success font-size-12'>".$record->status."</span>";
+                    }else{
+                        return  "<span class='badge badge-pill badge-soft-warning font-size-12'>Under Process</span>";
+                    }
                 }
+                
              })
             ->addColumn('actions',function($record) {
-                $actions = '<a href="'. route('customer.order_show',$record->id).'" class="on-default"><i class="fas fa-search-plus"></i></a>';
+                $actions = '<a href="'. route('customer.order_show',[get_route_url(),$record->id]).'" class="on-default"><i class="fas fa-search-plus"></i></a>';
                 return $actions;
             })
             ->rawColumns(['actions','payment_status','status','total'])
             ->make(true);
     }
     /*Wishlist*/
-    function add_wishlist($slug=''){
+    function add_wishlist($domain,$slug=''){
         $product_info = \App\Models\Product::where('slug',$slug)->first();
         if(!empty($product_info)){
             $wishlist['user_id'] = Auth::id();
@@ -121,7 +135,7 @@ class HomeController extends Controller
             }
         }
     }
-    function add_wishlist_ajax($slug=''){
+    function add_wishlist_ajax($domain,$slug=''){
         $product_info = \App\Models\Product::where('slug',$slug)->first();
         if(!empty($product_info)){
             $wishlist['user_id'] = Auth::id();
@@ -148,7 +162,7 @@ class HomeController extends Controller
         
         return view('customer.wishlist',$data);
     }
-    function wishlist_remove($id=0){
+    function wishlist_remove($domain,$id=0){
          $delete =\App\Models\Wishlist::where('user_id',Auth::id())->where('product_id',$id)->delete();
          if($delete){
             Session::flash('success', 'Product has been removed from your wishlist successfully!');
@@ -159,7 +173,7 @@ class HomeController extends Controller
         }
     }
 
-    function cancel_order(Request $request, $id){
+    function cancel_order($domain,Request $request, $id){
         $form_data = $request->all();
         $form_data['cancel'] = 1;
         $data = \App\Models\Orders::find($id);

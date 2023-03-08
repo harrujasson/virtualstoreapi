@@ -21,11 +21,18 @@ class OrdersController extends Controller
      */
     protected $common;
     protected $title='Orders';
-    public function __construct(){
+    protected $mid;
+    public $domain;
+    public function __construct(Request $request){
         $this->middleware('auth');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
-    public function show(Request $request){
+    public function show($domain,Request $request){
         $data['title'] = $this->title; 
         $data['payment_status']='';
         if($request->has('payment_status') && $request->get('payment_status') !=""){
@@ -33,7 +40,7 @@ class OrdersController extends Controller
         }
         return view('admin.orders.list',$data);
     }
-    public function view($id=0){
+    public function view($domain,$id=0){
       $content['title'] = $this->title; 
       $content['r']= Orders::with(['order_details','shipping','user'])->where('id',$id)->first();
       $content['tracking'] = TrackOrder::where('item_id',$id)->where('type','Order')->where('post_by','Admin')->get();
@@ -41,9 +48,10 @@ class OrdersController extends Controller
       return view('admin.orders.view',$content);
     }
 
-    public function update(Request $request,$id){
+    public function update($domain,Request $request,$id){
         
         $form_data = $request->all();
+        //echo "<pre>"; print_r($form_data); die();
         $data = Orders::find($id);
         if($data->update($form_data)){
             $request->session()->flash('success', 'Order updated successfully!');
@@ -54,7 +62,7 @@ class OrdersController extends Controller
         }
     }
 
-    function track_order(Request $request,$id){
+    function track_order($domain,Request $request,$id){
         $form_data = $request->all();
         
         
@@ -86,7 +94,7 @@ class OrdersController extends Controller
     }
 
     function showList(){
-        $record = Orders::query();
+        $record = Orders::where('mid',Auth::user()->mid);
         return Datatables::of($record)
             ->editColumn('total',function($record){
                 return currency().number_format($record->total,2);
@@ -98,33 +106,40 @@ class OrdersController extends Controller
                     return "<span class='badge badge-pill badge-soft-success font-size-12'>Paid</span>";
                 }
             })
+            ->editColumn('status',function($record){
+                if($record->cancel =="1"){
+                    return "<span class='badge badge-pill badge-soft-danger font-size-12'>Cacnelled</span>";
+                }else{
+                    return "<span class='badge badge-pill badge-soft-success font-size-12'>".$record->status."</span>";
+                }
+            })
 
             ->editColumn('date',function($record){
                 return date('M-d-y H:i a',strtotime($record->created_at));
             })
             ->addColumn('actions',function($record) {
-                $actions = '<a href="'. route('admin.orders.show_full',$record->id).'" class="on-default"><i class="fa fa-search-plus"></i></a> &nbsp;';
+                $actions = '<a href="'. route('admin.orders.show_full',[get_route_url(),$record->id]).'" class="on-default"><i class="fa fa-search-plus"></i></a> &nbsp;';
 
                 return $actions;
             })
-            ->rawColumns(['actions','payment_status','total'])
+            ->rawColumns(['actions','payment_status','total','status'])
             ->make(true);
     }
 
-    function delete($id){
+    function delete($domain,$id){
 
         echo Attribute::where("id",$id)->delete();
         $this->delete_attribute_value($id);
         die();
     }
 
-    function order_track(Request $request){
+    function order_track($domain,Request $request){
         $tracking  = TrackOrder::where('type','Product')->where('post_by','Vendor')->where('item_id',$request->input('id'))->get();
         $content['tracking'] = $tracking;
         return view('ajax.orders.trackorder',$content);
     }
 
-    function information(Request $request){
+    function information($domain,Request $request){
         $var['var'] ='';
         $attach['attach']='';
         $record = OrdersDetails::where('id',$request->input('id'))->first();
@@ -156,7 +171,7 @@ class OrdersController extends Controller
         return \App\Model\Attribute::where('id',$id)->pluck($type)->first();
     }
 
-    function export(Request $request){
+    function export($domain,Request $request){
         $query = Orders::query();
         if($request->has('start_date') && $request->get('start_date') !=""){
            

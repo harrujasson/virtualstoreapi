@@ -24,7 +24,7 @@ class RedirectIfAuthenticated
         if (Auth::guard($guards)->check()) {
             $user = Auth::user();
             if($user->isAdmin()){
-                return redirect('admin/my-porfile');
+                return redirect('admin/my-profile');
             }elseif($user->isClient()){
                 return redirect('customer/home');
             }

@@ -24,7 +24,7 @@
                 <h4 class="card-title mb-5">{{$title}}</h4>
                 <div class="row">
                     <div class="mx-auto mb-4 mt-2">
-                        <a href="{{route('admin.product.add_new')}}" class="btn btn-primary">Add New</a>
+                        <a href="{{route('admin.product.add_new',[get_route_url()])}}" class="btn btn-primary">Add New</a>
                     </div>
                 </div>
                 @include('widget/notifications')
@@ -81,7 +81,7 @@
             serverSide: true,
             pageLength: 25,
             ajax: {
-                url:'{!! route('admin.product.showAjaxList') !!}',
+                url:'{!! route('admin.product.showAjaxList',[get_route_url()]) !!}',
                 data:function(d){
                     d.filterextend = $('#status_info').val(),
                     d.createdby = $('#created_by').val()

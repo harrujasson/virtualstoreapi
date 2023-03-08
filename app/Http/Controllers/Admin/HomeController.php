@@ -17,9 +17,16 @@ class HomeController extends Controller
      * @return void
      */
     protected $title='Store Configuration';
-    public function __construct()
-    {
+    protected $mid;
+    public $domain;
+    
+    public function __construct(Request $request){
         $this->middleware('auth');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
 
@@ -29,15 +36,16 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index(){
+       
         return view('admin.dashboard');
     }
     function config(){
         $data['title'] = $this->title; 
-        $data['r'] =Config::where('user_id',Auth::id())->first();
+        $data['r'] =Config::where('user_id',Auth::id())->where('mid',$this->mid)->first();
         //echo "<pre>"; print_r($data['r']); die();
         return view('admin.config',$data);
     }
-    function config_save(Request $request){
+    function config_save($domain,Request $request){
         $form_data = $request->all();
         if($request->file('logo')){
             $form_data['logo']=  $this->common->fileUpload($request->file('logo'),  './uploads/profile',1 );
@@ -48,7 +56,7 @@ class HomeController extends Controller
 
         unset($form_data['_token']);
 
-        $is_exist  = Config::where('user_id',Auth::id())->count();
+        $is_exist  = Config::where('user_id',Auth::id())->where('mid',$this->mid)->count();
 
         if($is_exist){
 
@@ -57,6 +65,7 @@ class HomeController extends Controller
             $status = $data->update($form_data);
         }else{
             $form_data['user_id'] = Auth::id();
+            $form_data['mid'] = $this->mid;
             $data = new Config($form_data);
             $status = $data->save();
         }
@@ -71,12 +80,14 @@ class HomeController extends Controller
         
     }
 
-    function profile(){
-        $content['r'] = User::where('id',Auth::id())->first();
+    function profile(){   
+        $data['title'] = $this->title;      
+        $content['r'] = User::where('id',Auth::id())->where('mid',$this->mid)->first();
+       
         return view('admin.profile',$content);
     }
-    function my_profile_save(Request $request){
-
+    function my_profile_save($domain,Request $request){
+        
         $request->validate([
             'name' => 'bail|required',
             'email' => 'required|string|email|unique:users,email,'.Auth::id(),

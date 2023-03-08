@@ -38,7 +38,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane p-3 active show" id="home-1" role="tabpanel">
-                    <form class="needs-validation" novalidate method="post" action="{{ route('admin.product.edit_update',$r->id) }}"  enctype="multipart/form-data">
+                    <form class="needs-validation" novalidate method="post" action="{{ route('admin.product.edit_update',[get_route_url(),$r->id]) }}"  enctype="multipart/form-data">
 
                         <div class="card">
                             <div class="card-body">

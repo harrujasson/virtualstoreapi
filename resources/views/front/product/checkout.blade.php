@@ -55,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <form class="form-parsley" novalidate method="post" action="{{ route('order_submit') }}"
+        <form class="form-parsley" novalidate method="post" action="{{ route('order_submit',[get_route_url()]) }}"
             enctype="multipart/form-data">
 
             @csrf

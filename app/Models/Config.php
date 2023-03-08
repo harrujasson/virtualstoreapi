@@ -10,6 +10,7 @@ class Config extends Model{
    protected $fillable=[
        'store_name',
        'logo',
+       'mid',
        'address',
        'invoice_logo',
        'invoice_address',

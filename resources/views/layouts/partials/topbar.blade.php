@@ -18,11 +18,11 @@
                             <span class="ml-1 nav-user-name hidden-sm"> {{Auth::user()->name .' '.Auth::user()->last_name}} <i class="mdi mdi-chevron-down"></i> </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{{route(auth_info().'.my_profile')}}"><i class="dripicons-user text-muted mr-2"></i> Profile</a>
+                            <a class="dropdown-item" href="{{route(auth_info().'.my_profile',[get_route_url()])}}"><i class="dripicons-user text-muted mr-2"></i> Profile</a>
                             
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="javascript:void(0);" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="dripicons-exit text-muted mr-2"></i> Logout</a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('logout',[get_route_url()]) }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
                         </div>

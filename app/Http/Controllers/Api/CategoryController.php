@@ -44,11 +44,18 @@ class CategoryController extends Controller
         return response()->json(['success'=>$list], $this->successStatus);
     } 
 
-    function single(Request $request,$slug=''){
+    function single(Request $request){
+        $validator = Validator::make($request->all(), [
+            'slug' =>'required',
+        ],  $this->message_errors());
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
         $mid  = 0;
         if($request->has('mid')){
-            $mid = $request->get('mid');
+            $mid = $request->input('mid');
         }
+        $slug = $request->input('slug');
         $result = Category::where('slug',$slug)->where('status',1);
        
         if($mid){
@@ -61,7 +68,8 @@ class CategoryController extends Controller
         return [
             'name.required'=>'Name Required',
             'email.required'=>'Email required',
-            'password.required'=>'Password Required'
+            'password.required'=>'Password Required',
+            'slug.required'=>'Slug Required',
         ];
     }
 }

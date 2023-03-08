@@ -15,6 +15,13 @@ use Input;
 use Storage;
 use File;
 
+use App\Models\Attribute;
+use App\Models\Review;
+use App\Models\Attributevalue;
+
+use App\Models\AttributeProduct;
+use App\Models\AttributeVariationsValue;
+
 class ProductController extends Controller
 {
     /**
@@ -23,8 +30,16 @@ class ProductController extends Controller
      * @return void
      */
     protected $common;
+    protected $mid;
+    public $domain;
     protected $title='Product';
-    public function __construct(){
+    public function __construct(Request $request){
+        $this->middleware('auth');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
 
@@ -35,27 +50,28 @@ class ProductController extends Controller
      */
     public function create(){
         $content['title'] = $this->title; 
-        $content['category_individual'] = Category::where('type','Individual')->get();
-        $content['category_main'] = Category::where('type','Main')->where('status',1)->get();
-        $content['tax'] = \App\Models\Tax::where('status',1)->get();
+        $content['category_individual'] = Category::where('mid',$this->mid)->where('type','Individual')->get();
+        $content['category_main'] = Category::where('mid',$this->mid)->where('type','Main')->where('status',1)->get();
+        $content['tax'] = \App\Models\Tax::where('mid',$this->mid)->where('status',1)->get();
+        $content['attribute'] = Attribute::all();
         return view('admin.product.create',$content)->with('call_cat_fn',$this);
     }
     public function show(){
         $content['title'] = $this->title; 
-        $content['category'] = Category::all();
+        $content['category'] = Category::where('mid',$this->mid)->get();
         return view('admin.product.list',$content);
     }
-    public function edit($id){
+    public function edit($domain,$id){
       $content['title'] = $this->title; 
-      $content['r']=  Product::with(['category'])->where('id',$id)->first();
-      $content['category_individual'] = Category::where('type','Individual')->get();
-      $content['category_main'] = Category::where('type','Main')->where('status',1)->get();
-      $content['tax'] = \App\Models\Tax::where('status',1)->get();
+      $content['r']=  Product::with(['category'])->where('mid',$this->mid)->where('id',$id)->first();
+      $content['category_individual'] = Category::where('mid',$this->mid)->where('type','Individual')->get();
+      $content['category_main'] = Category::where('mid',$this->mid)->where('type','Main')->where('status',1)->get();
+      $content['tax'] = \App\Models\Tax::where('mid',$this->mid)->where('status',1)->get();
       $content['review'] = \App\Models\Review::where('product_id',$id)->orderBy('id', 'DESC')->get();
       return view('admin.product.edit',$content)->with('call_cat_fn',$this);
     }
 
-    public function publish(Request $request,$id,$approve){        
+    public function publish($domain,Request $request,$id,$approve){        
         $data = Review::find($id);
         $data->approve = $approve;
         if($data->save()){
@@ -67,7 +83,7 @@ class ProductController extends Controller
         }
     }
 
-    public function store(Request $request){
+    public function store($domain,Request $request){
         $variation = array();
         $main_variation = array();
         $request->validate([
@@ -106,6 +122,7 @@ class ProductController extends Controller
         $form_data['status'] = 1;
         $form_data['created_by'] = Auth::id();
         $form_data['created_by_type'] = 'Admin';
+        $form_data['mid'] =Auth::user()->mid;
         $data = new Product($form_data);
         if($data->save()){
             //echo "<pre>"; print_r($form_data); die();
@@ -128,7 +145,7 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request,$id){
+    public function update($domain,Request $request,$id){
         
         $variation = array();
         $main_variation = array();
@@ -184,6 +201,7 @@ class ProductController extends Controller
         if($data->update($form_data)){
             $product_id = $id;
             if($request->has('category')){
+                CategoryProduct::where('product_id',$product_id)->delete();
                 foreach($request->input('category') as $cat){
                     $category['product_id'] = $product_id;
                     $category['category_id'] = $cat;
@@ -202,8 +220,8 @@ class ProductController extends Controller
      
     }
 
-    function showList(Request $request){
-        $record = Product::query();
+    function showList($domain,Request $request){
+        $record = Product::where('mid',Auth::user()->mid);
         if($request->get('filterextend')!==false){
             if($request->get('filterextend')!=""){
                 $record->where('status','=',$request->get('filterextend'));
@@ -243,15 +261,15 @@ class ProductController extends Controller
                 return date('m-d-Y', strtotime($record->created_at));
             })
             ->addColumn('actions',function($record) {
-                $actions = '<a href="'. route('admin.product.editForm',$record->id).'" class="on-default"><i class="fas fa-search-plus"></i></a> &nbsp;';
-                $actions.= '<a href="javascript:void(0);" data-url="'. route('admin.product.deleteAjax',$record->id).'" class="on-default sa-warning"><i class="fas fa-trash-alt"></i></a> &nbsp;';
+                $actions = '<a href="'. route('admin.product.editForm',[get_route_url(),$record->id]).'" class="on-default"><i class="fas fa-search-plus"></i></a> &nbsp;';
+                $actions.= '<a href="javascript:void(0);" data-url="'. route('admin.product.deleteAjax',[get_route_url(),$record->id]).'" class="on-default sa-warning"><i class="fas fa-trash-alt"></i></a> &nbsp;';
                 return $actions;
             })
             ->rawColumns(['actions','picture','stock','price','status'])
             ->make(true);
     }
 
-    function delete($id){
+    function delete($domain,$id){
         echo Product::where("id",$id)->delete();
         die();
     }
@@ -273,5 +291,49 @@ class ProductController extends Controller
             }
             return implode(", ", $cat_info);
         }
+    }
+
+    function attribute_load($domain,Request $request){
+        $content['attr'] = Attribute::where('id',$request->input('attr'))->first();
+        $content['attr_value'] = Attributevalue::where('attribute_id',$request->input('attr'))->get();
+        if($request->input('variation') =="1"){
+            
+           return view('ajax.product.attribute_variation',$content);
+        }else{
+           return view('ajax.product.attribute',$content);
+        }
+    }
+    function attribute_load_exist($domain,Request $request){
+        $ids  = AttributeProduct::where('product_id',$request->input('product_id'))->pluck('attribute_id')->all();
+        if(!empty($ids)){
+            $content['attr_all'] = Attribute::whereIn('id',$ids)->get();
+            $content['product_id'] = $request->input('product_id');
+            if($request->input('variation') =="1"){
+               return view('ajax.product.attribute_variation_edit',$content)->with("attr_call_edit",$this);
+            }else{
+               return view('ajax.product.attribute_edit',$content)->with("attr_call_edit",$this);
+            }
+        }
+    }
+    function attribute_value_exist($attr_id=0){
+       return Attributevalue::where('attribute_id',$attr_id)->get();
+    }
+    function attribute_value_call_exist($product_id,$attr_id,$value,$fld='attr_value_name_price'){
+        $record =  AttributeVariationsValue::where('product_id',$product_id)->where('attribute_id',$attr_id)->where('attr_value_name',$value)->first();
+        if(!empty($record)){
+            return $record->$fld;
+        }
+    }
+    function attribute_value_exist_fill($product_id,$attr_id){
+        $record = AttributeProduct::where('product_id',$product_id)->where('attribute_id',$attr_id)->first();
+        if(!empty($record)){
+            return $record->attribute_value;
+        }
+    }
+
+    function delete_product_attributes($id){
+        CategoryProduct::where('product_id',$id)->delete();
+        AttributeVariationsValue::where('product_id',$id)->delete();
+        AttributeProduct::where('product_id',$id)->delete();
     }
 }

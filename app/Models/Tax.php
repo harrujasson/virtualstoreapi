@@ -8,7 +8,7 @@ class Tax extends Model{
    
    protected $table="tax";
    protected $fillable=[
-       'name','rate','tax','status'
+       'name','rate','tax','status','mid'
    ];   
    
 }

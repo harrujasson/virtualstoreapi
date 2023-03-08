@@ -111,7 +111,7 @@
                                                 
                                             @else
                                             <div class="form-check form-check-warning mb-3 order-custom-radio">
-                                            <input class="form-check-input" type="checkbox" id="cancelorderControl">
+                                            <input class="form-check-input" name="cancel" value="1" type="checkbox" id="cancelorderControl">
                                                 <label class="" for="cancelorderControl">
                                                     Yes
                                                 </label>
@@ -123,7 +123,7 @@
                                     </div>
                                     <div class="cancel_order_container"  style="display:none;">
 
-                                        <form method="post" action="{{route('customer.cancel_order',$r->id)}}">
+                                        <form method="post" action="{{route('customer.cancel_order',[get_route_url(),$r->id])}}">
                                             @csrf
                                             <div class="row mb-4 mt-4">
                                                 <label class="col-sm-3">Reason of Cancel:</label>
@@ -250,7 +250,7 @@
                                         @if(!empty($r->order_details))
                                         @foreach($r->order_details as $ord)
                                             <tr>
-                                                <td align="left" data-title="Product"><i><a href="{{route('admin.product.editForm',$ord->product_id)}}" target="_blank">{{$ord->product_name}}</a></i></td>
+                                                <td align="left" data-title="Product"><i><a href="{{route('admin.product.editForm',[get_route_url(),$ord->product_id])}}" target="_blank">{{$ord->product_name}}</a></i></td>
                                                 <td data-title="Price">{{number_format($ord->price,2)}}</td>
                                                 <td data-title="Qty">{{$ord->qty}}</td>
                                                 <td data-title="Discount">{{number_format($ord->discount,2)}}</td>

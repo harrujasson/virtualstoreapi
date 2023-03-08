@@ -45,7 +45,18 @@ class ProductController extends Controller
         return response()->json(['success'=>$list], $this->successStatus);
     } 
 
-    function product_category(Request $request,$slug=''){
+    function product_category(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'slug' =>'required',
+        ],  $this->message_errors());
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
+        }
+
+        $slug = $request->input('slug');
+
         $cat_id = Category::where('slug',$slug)->pluck('id')->first(); 
         if(!$cat_id){
             return response()->json(['error'=>'Invalid category'], $this->error);
@@ -67,14 +78,20 @@ class ProductController extends Controller
         return response()->json(['success'=>$list], $this->successStatus);
 
     }
-    function product_single(Request $request,$slug=''){
+    function product_single(Request $request){
         $mid  = 0;
-        if($request->has('mid')){
-            $mid = $request->get('mid');
+        $validator = Validator::make($request->all(), [
+            'slug' =>'required',
+        ],  $this->message_errors());
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()], 401);
         }
+
+        $slug = $request->input('slug');
         $result = Product::where('slug',$slug)->with('category')->where('status',1);
         if($request->has('mid')){
-            $mid = $request->get('mid');
+            $mid = $request->input('mid');
         }
         if($mid){
             $result->where('mid',$mid);
@@ -89,7 +106,8 @@ class ProductController extends Controller
         return [
             'name.required'=>'Name Required',
             'email.required'=>'Email required',
-            'password.required'=>'Password Required'
+            'password.required'=>'Password Required',
+            'slug.required'=>'Slug required',
         ];
     }
 }

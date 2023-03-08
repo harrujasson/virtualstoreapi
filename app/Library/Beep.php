@@ -11,7 +11,7 @@ Class beep{
     function __construct(){
     }
     function make_payment($data){
-        $data['returnUrl'] =route('payment.beep_payment_response');
+        $data['returnUrl'] =route('payment.beep_payment_response',[get_route_url()]);
         $data['user'] =$this->user;
         $data['apiToken'] =$this->apiToken;
       

@@ -24,7 +24,7 @@
                         </div>
                     @endif
                           
-                    <form method="POST" action="{{ route('password.email') }}">
+                    <form method="POST" action="{{ route('password.email',[get_route_url()]) }}">
                         @csrf
                                         <div class="form-group">
                                             <label for="username">E-Mail Address</label>
@@ -49,7 +49,7 @@
                                     </form><!--end form-->
 
                                 <div class="m-3 text-center text-muted">
-                                    <p class="">Don't have an account ?  <a href="{{ route('register') }}" class="text-primary ml-2">Free Register</a></p>
+                                    <p class="">Don't have an account ?  <a href="{{ route('register',[get_route_url()]) }}" class="text-primary ml-2">Free Register</a></p>
                                 </div>
                                 </div><!--end /div-->
                             </div><!--end card-body-->

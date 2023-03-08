@@ -18,9 +18,16 @@ class UserController extends Controller
      * @return void
      */
     protected $common;
+    protected $mid;
+    public $domain;
     protected $title='Clients';
-    public function __construct(){
+    public function __construct(Request $request){
         $this->middleware('auth');
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
 
@@ -86,6 +93,7 @@ class UserController extends Controller
 
         $formdata['password'] = Hash::make($request->input('password'));
         $formdata['role']  = 2;
+        
 
         if($request->file('picture')){
             $formdata['picture']=  $this->common->fileUpload($request->file('picture'),  './uploads/profile');

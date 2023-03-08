@@ -30,7 +30,7 @@
  
             @include('widget/notifications')
 
-                <form class="needs-validation" novalidate method="post" action="{{ route('admin.tax.edit_update',$r->id) }}"  enctype="multipart/form-data">
+                <form class="needs-validation" novalidate method="post" action="{{ route('admin.tax.edit_update',[get_route_url(),$r->id]) }}"  enctype="multipart/form-data">
 
                         <div class="row">
                             <div class="col-md-6">

@@ -71,7 +71,7 @@
         });
 
         //colorpicker start
-        $('#b_color-default, #b_color_rgb, #b_color_hsl').colorpicker();
+        $('#b_color-default, #b_color_rgb, #b_color_hsl, .colorpicker').colorpicker();
 
 
         // MAterial Date picker    

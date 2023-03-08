@@ -7,8 +7,8 @@ use App\Http\Controllers\CommonController;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 use Auth;
-use App\Model\Attribute;
-use App\Model\Attributevalue;
+use App\Models\Attribute;
+use App\Models\Attributevalue;
 
 
 class AttributeController extends Controller
@@ -19,6 +19,7 @@ class AttributeController extends Controller
      * @return void
      */
     protected $common;
+    protected $title='Attribute';
     public function __construct(){
         $this->middleware('auth');
         $this->common=new CommonController();
@@ -30,14 +31,17 @@ class AttributeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(){
+        $content['title'] = $this->title; 
         $content['attribute'] = Attribute::get();
 
         return view('admin.attribute.create',$content);
     }
     public function show(){
-        return view('admin.attribute.list');
+        $content['title'] = $this->title; 
+        return view('admin.attribute.list',$content);
     }
     public function edit($id){
+      $content['title'] = $this->title; 
       $content['r']=  Attribute::find($id);
       $content['values'] = Attributevalue::where('attribute_id',$id)->get();      
       $content['attribute'] = Attribute::where('id','!=',$id)->get();
@@ -45,16 +49,13 @@ class AttributeController extends Controller
     }
 
     public function store(Request $request){
-
+       
         $request->validate([
             'name' => 'required',
             'label' => 'required'
         ]);
         $form_data = $request->all();
-
-
         $form_data['name'] = str_replace(' ', '_', $form_data['name']);
-
         $data = new Attribute($form_data);
         if($data->save()){
 
@@ -69,27 +70,28 @@ class AttributeController extends Controller
                             $i++;
                         }
                     }
-                } 
+                }
+
                 if(!empty($request->input('attribute'))){
                     $attr_value['attribute_id'] = $data->id;                    
                     foreach($attributes as $attr){                      
-
-                        $attr_value['data'] = $attr['value'];
-                        $attr_value['name'] = $attr['name'];
-                        $attr_value['parent_id'] = '';
-                        $attr_content = new Attributevalue($attr_value);
-                        $attr_content->save();                        
-
+                        if(isset($attr['name'])){
+                            $attr_value['data'] = $attr['value'];
+                            $attr_value['name'] = $attr['name'];
+                            $attr_value['parent_id'] = '';
+                            $attr_content = new Attributevalue($attr_value);
+                            $attr_content->save();  
+                        }
                     }
 
                 }
             }
 
             $request->session()->flash('success', 'Attribute created successfully!');
-            return redirect(route('admin.attribute.create'));
+            return redirect()->back();
         }else{
             $request->session()->flash('error', 'Error!');
-            return redirect(route('admin.attribute.create'));
+            return redirect()->back();
         }
     }
     public function update(Request $request,$id){
@@ -118,12 +120,13 @@ class AttributeController extends Controller
                     $attr_value['attribute_id'] = $data->id;
                     $this->delete_attribute_value($data->id);
                     foreach($attributes as $attr){                      
-
-                        $attr_value['data'] = $attr['value'];
-                        $attr_value['name'] = $attr['name'];
-                        $attr_value['parent_id'] = '';
-                        $attr_content = new Attributevalue($attr_value);
-                        $attr_content->save();                        
+                        if(isset($attr['name'])){
+                            $attr_value['data'] = $attr['value'];
+                            $attr_value['name'] = $attr['name'];
+                            $attr_value['parent_id'] = '';
+                            $attr_content = new Attributevalue($attr_value);
+                            $attr_content->save();    
+                        }                    
 
                     }
 

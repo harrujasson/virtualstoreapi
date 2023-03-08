@@ -25,7 +25,14 @@ class ShopController extends Controller
      */
     protected $common;
     protected $page=9;
-    public function __construct(){
+    protected $mid;
+    public $domain;
+    public function __construct(Request $request){
+        $this->domain = $request->subdomain; 
+        $this->mid = $this->dnsloader($request->subdomain); 
+        if(!$this->mid){
+            return redirect()->to(base_site());
+        } 
         $this->common=new CommonController();
     }
 
@@ -41,7 +48,7 @@ class ShopController extends Controller
         $content['price_start'] ='';
         $content['price_end'] ='';
         $price = 0;
-        $query = Product::where('status',1);
+        $query = Product::where('status',1)->where('mid',$this->mid);
         
         if($request->has('search') && $request->get('search')!="") {
             $content['search'] =$request->get('search');
@@ -78,7 +85,7 @@ class ShopController extends Controller
 
     function category_list(Request $request, $slug =""){
          if($slug==''){
-            return redirect(route('shop'));
+            return redirect(route('shop',[get_route_url()]));
         }
 
         $content['search'] ='';
@@ -89,18 +96,18 @@ class ShopController extends Controller
         $price = 0;
 
 
-        $catInfo = App\Model\Category::where('slug',$slug)->first();
+        $catInfo = App\Model\Category::where('slug',$slug)->where('mid',$this->mid)->first();
         $catname = $catInfo->name;
 
           
 
-        $cat_id = App\Model\Category::where('slug',$slug)->pluck('id')->first();        
-        $parent_cat_id = App\Model\Category::where('slug',$slug)->pluck('parent')->first();
+        $cat_id = App\Model\Category::where('slug',$slug)->where('mid',$this->mid)->pluck('id')->first();        
+        $parent_cat_id = App\Model\Category::where('slug',$slug)->where('mid',$this->mid)->pluck('parent')->first();
         if($cat_id){
 
         $query = Product::whereHas('category',function($query) use ($cat_id){
                 $query->where('category_id',$cat_id);
-        })->with('category')->where('status',1);
+        })->where('mid',$this->mid)->with('category')->where('status',1);
 
 
         if($request->has('search') && $request->get('search')!="") {
@@ -192,18 +199,21 @@ class ShopController extends Controller
             return view('front.product.shop_cat',$content);
         }else{
             Session::flash('error', 'For the time this category not available. Please try with other category');
-            return redirect(route('shop'));
+            return redirect(route('shop',get_route_url()));
         }
 
 
     }
 
-    function details($slug =''){
+    function details($request,$slug =''){
         if($slug==''){
             return redirect()->back();
         }
-        $content['r'] = Product::where('slug',$slug)->first();               
+      
+        
+        $content['r'] = Product::where('slug',$slug)->where('mid',$this->mid)->first();               
         $content['related']  ='';
+        //echo "<pre>"; print_r($content['r']); die();
 
         if(!empty($content['r'])){
             $cat = App\Models\CategoryProduct::where('product_id',$content['r']->id)->first();
@@ -214,6 +224,7 @@ class ShopController extends Controller
                 $content['related'] = Product::whereHas('category',function($query) use ($cat_id){
                         $query->where('category_id',$cat_id);
                 })
+                ->where('mid',$this->mid)
                 ->with('category')
                 ->orderBy('created_at', 'desc')
                 ->take(10)
@@ -221,6 +232,7 @@ class ShopController extends Controller
 
             }
         }
+       
         $content['review'] = Review::where('approve',1)->where('product_id',$content['r']->id)->orderBy('id','desc')->paginate(3);
         
         //echo "<pre>"; print_r($content['review']); die();
@@ -283,7 +295,7 @@ class ShopController extends Controller
     function load_product(Request $request){
         if($request->has('slug')){
             $content['r'] = Product::with(['attribute'])
-                ->where('slug',$request->input('slug'))->first();
+                ->where('slug',$request->input('slug'))->where('mid',$this->mid)->first();
             return view('ajax.product_popup_detail',$content)->with('call_back_fun',$this);
         }
     }
@@ -297,7 +309,7 @@ class ShopController extends Controller
             die();
         }
         $slug = $request->input('slug');
-        $product=  Product::where('slug',$slug)->first();
+        $product=  Product::where('slug',$slug)->where('mid',$this->mid)->first();
 
         if(!empty($product)){
             $status = $this->cart_add($product,$request);
@@ -363,9 +375,9 @@ class ShopController extends Controller
         return $status;
 
     }
-    function cart_add_details(Request $request, $slug =''){       
+    function cart_add_details($domain,Request $request, $slug =''){  
         if($slug==''){
-            return redirect(route('shop'));
+            return redirect(route('shop',[get_route_url()]));
         }  
         
         if(configinfo('status') == 0){
@@ -373,20 +385,20 @@ class ShopController extends Controller
             return redirect()->back();
         }
 
-        $product=  Product::where('slug',$slug)->first();
+        $product=  Product::where('slug',$slug)->where('mid',$this->mid)->first();
 
         if(!empty($product)){
             $this->cart_add($product,$request);
             if($request->input('form_type') == "cart"){
                 $request->session()->flash('success', 'Product added in cart successfully!');
-                return redirect(route('product_show',$slug));
+                return redirect(route('product_show',[get_route_url(),$slug]));
             }else{
-                return redirect(route('checkout'));
+                return redirect(route('checkout',[get_route_url()]));
             }
             
         }else{
             $request->session()->flash('error', 'Something went wrong . Please try after some time');
-            return redirect(route('product_show',$slug));
+            return redirect(route('product_show',[get_route_url(),$slug]));
         }
     }
     
@@ -398,11 +410,11 @@ class ShopController extends Controller
 
 
     function tax_calculate($tax_id,$amount=0){
-      $tax_rate = \App\Models\Tax::where('id',$tax_id)->pluck('rate')->first();
+      $tax_rate = \App\Models\Tax::where('id',$tax_id)->where('mid',$this->mid)->pluck('rate')->first();
       return $amount * $tax_rate /100;
     }
     function tax_rate($tax_id){
-       return \App\Models\Tax::where('id',$tax_id)->pluck('rate')->first();
+       return \App\Models\Tax::where('id',$tax_id)->where('mid',$this->mid)->pluck('rate')->first();
     }
     function cart_item_remove($id=0){
         \Cart::remove($id);
@@ -422,7 +434,7 @@ class ShopController extends Controller
         \Cart::destroy();
     }
     function get_product_info($id=0,$field){
-        return Product::where('id',$id)->pluck($field)->first();
+        return Product::where('id',$id)->where('mid',$this->mid)->pluck($field)->first();
     }
     function checkout(){
         if(configinfo('status') == 0){
@@ -435,12 +447,12 @@ class ShopController extends Controller
             return view('front.product.checkout',$content)->with('call_back',$this);
         }else{
             Session::flash('error', 'Please first add some product in basket');
-            return redirect(route('shop'));
+            return redirect(route('shop',[get_route_url()]));
         }
 
     }
 
-    function order_generate(Request $request){
+    function order_generate($domain,Request $request){
 
 
 
@@ -495,6 +507,7 @@ class ShopController extends Controller
         $order['total']=deliver_charge()+ $this->get_cart_figure('amount_total');
         $order['tax']= $this->get_cart_figure('tax_total');
         $order['payment_status'] ='non-paid';
+        $order['mid'] = $this->mid;
         $order['order_note']=$request->input('order_note');
         if($request->has('ship')){
             $order['product_ship_to'] ='different';
@@ -571,17 +584,17 @@ class ShopController extends Controller
             //
             //$this->send_invoice_email($order_id,Auth::user()->email);
             if($request->input('paymenttype') == "online"){
-                return redirect(route('payment.beep_process',encode($order_id)));
+                return redirect(route('payment.beep_process',[get_route_url(),encode($order_id)]));
             }elseif($request->input('paymenttype') == "credit"){
                 /****Credit Process */
             }else{
                 \Cart::destroy();
                 //$this->send_invoice_email($order_id,Auth::user()->email);
-                return redirect(route('order_success_offline',$order_id));
+                return redirect(route('order_success_offline',[get_route_url(),$order_id]));
             }
 
         }else{
-            return redirect(route('order_fail'));
+            return redirect(route('order_fail',[get_route_url()]));
         }
     }
     function order_success($id=0){

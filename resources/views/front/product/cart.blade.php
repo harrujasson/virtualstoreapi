@@ -27,7 +27,7 @@
                     </div>
                     <div class="shoping-cart-box">
                         @include('widget/notifications')
-                        <form action="{{route('cart_update')}}" method="post" class="cart-table">
+                        <form action="{{route('cart_update',[get_route_url()])}}" method="post" class="cart-table">
                             @csrf
                             @if(!empty($product))
                             @php $tax_total = 0; @endphp
@@ -44,7 +44,7 @@
 
                                 <div class="shop-cart-head text-center   pb-md-0 pb-4 mb-md-0 mb-4">
                                     @if($picture!="")
-                                    <a href="{{route('product_show',$slug)}}">
+                                    <a href="{{route('product_show',[get_route_url(),$slug])}}">
                                         <div class="image">
                                             <img src="{{asset('uploads/product/'.$picture)}}" alt="{{$p->name}}">
 
@@ -56,7 +56,7 @@
                                 <div class="shop-cart-desp w-100">
                                     <div class="shop-cart-desp-head d-flex justify-content-between mb-3">
                                         <p class="cart-title mb-0"> <a target="_blank"
-                                                href="{{route('product_show',$slug)}}">{{$p->name}}</a></p>
+                                                href="{{route('product_show',[get_route_url(),$slug])}}">{{$p->name}}</a></p>
                                         <div class="shop-cart-price">
                                             <span class="actual-price">{!! currency()
                                                 !!}{{number_format($p->price,2)}}</span>
@@ -98,7 +98,7 @@
 
 
                                     <div class="place-order ">
-                                        <a href="{{route('cart_list_remove',$p->rowId)}}"
+                                        <a href="{{route('cart_list_remove',[get_route_url(),$p->rowId])}}"
                                             class="btn  remove-item bg-secondary text-white">Remove</a>
                                         <button class="btn  update-item">Place Order</button>
                                     </div>
@@ -131,7 +131,7 @@
                         <div class="place-order text-center checkout-btn">
                             <p class="total d-flex justify-content-between mt-4">Total <span>{!! currency()
                                     !!}{{number_format(\Cart::subtotal() +$tax_total + deliver_charge() ,2)}}</span></p>
-                            <a href="{{route('checkout')}}" class="btn mt-4">Checkout</a>
+                            <a href="{{route('checkout',[get_route_url()])}}" class="btn mt-4">Checkout</a>
                         </div>
                     </div>
 
@@ -150,7 +150,7 @@
 
 
                             </div>
-                            <a href="{{route('shop')}}" class="btn btn-success mt-4">Continue Shop</a>
+                            <a href="{{route('shop',[get_route_url()])}}" class="btn btn-success mt-4">Continue Shop</a>
                         </div>
                     </div>
                     @endif

@@ -22,7 +22,7 @@
                             </div>
                             <!--end auth-logo-text-->
 
-                            <form class="form-horizontal auth-form my-4" method="POST" action="{{ route('login') }}">
+                            <form class="form-horizontal auth-form my-4" method="POST" action="{{ route('login',[get_route_url()]) }}">
                                 @csrf
                                 <div class="form-group">
                                     <label for="username">Email</label>
@@ -65,7 +65,7 @@
                                     <!--end col-->
                                     <div class="col-sm-6 text-right">
                                         @if (Route::has('password.request'))
-                                        <a href="{{ route('password.request') }}" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>
+                                        <a href="{{ route('password.request',[get_route_url()]) }}" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>
                                         @endif
                                     </div>
                                     <!--end col-->
@@ -85,7 +85,7 @@
                         <!--end /div-->
 
                         <div class="m-3 text-center text-muted">
-                            <p class="">Don't have an account ? <a href="{{ route('register') }}" class="text-primary ml-2">Free Register</a></p>
+                            <p class="">Don't have an account ? <a href="{{ route('register',[get_route_url()]) }}" class="text-primary ml-2">Free Register</a></p>
                         </div>
                     </div>
                     <!--end card-body-->

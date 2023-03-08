@@ -36,14 +36,14 @@
                         <tr>
                             <td style="width: 100px;">
                                 @if($p->products->feature_picture!="")
-                                <a href="{{route('product_show',$p->products->slug)}}" target="_blank">
+                                <a href="{{route('product_show',[get_route_url(),$p->products->slug])}}" target="_blank">
                                     <img src="{{asset('uploads/product/'.$p->products->feature_picture)}}" class="avatar-md h-auto d-block rounded">
                                 </a>
                                 @endif
                             </td>
                             <td>
                                 <h5 class="font-size-13 text-truncate mb-1">
-                                    <a href="{{route('product_show',$p->products->slug)}}" target="_blank" class="text-dark">{{$p->products->title}}</a>
+                                    <a href="{{route('product_show',[get_route_url(),$p->products->slug])}}" target="_blank" class="text-dark">{{$p->products->title}}</a>
                                 </h5>
                             </td>
                             <td>{!! currency() !!}
@@ -61,10 +61,10 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{route('product_show',$p->products->slug)}}"><i class="dripicons-cart"></i></a>
+                                <a href="{{route('product_show',[get_route_url(),$p->products->slug])}}"><i class="dripicons-cart"></i></a>
                             </td>
                             <td>
-                                <a href="{{route('customer.wishlist_remove',$p->products->id)}}"><i class="dripicons-cross"></i></a>
+                                <a href="{{route('customer.wishlist_remove',[get_route_url(),$p->products->id])}}"><i class="dripicons-cross"></i></a>
                             </td>
                         </tr>
                         @else

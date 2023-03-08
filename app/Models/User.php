@@ -19,7 +19,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'secret_key',
         'mid',
+        'dns',
         'last_name',
         'email',
         'password',
@@ -56,7 +58,7 @@ class User extends Authenticatable
     ];
 
     public function isAdmin(){
-        if($this->role == 1){
+        if($this->role == 3){
             return true;
         }
         else {

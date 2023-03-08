@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Auth;
 use App\Http\Resources\OrderDetails as OrderDetailsResource;
-
+use App\Http\Resources\Ship as ShipResource;
 
 class Order extends JsonResource
 {
@@ -33,6 +33,7 @@ class Order extends JsonResource
             'cancel'=>  $this->cancel,
             'deliver_charge'=>  $this->deliver_charge,
             'order_details'=>OrderDetailsResource::collection(\App\Models\OrdersDetails::where('order_id',  $this->id)->orderBy('id','desc')->get()),
+            'ship_details'=>ShipResource::collection(\App\Models\Shipping::where('order_id',  $this->id)->orderBy('id','desc')->get()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 

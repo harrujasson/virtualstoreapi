@@ -24,7 +24,7 @@
                 <h4 class="card-title mb-5">{{$title}}</h4>
                 <div class="row">
                     <div class="mx-auto mb-4 mt-2">
-                        <a href="{{route('admin.tax.add_new')}}" class="btn btn-primary">Add New</a>
+                        <a href="{{route('admin.tax.add_new',[get_route_url()])}}" class="btn btn-primary">Add New</a>
                     </div>
                 </div>
                 @include('widget/notifications')
@@ -58,7 +58,7 @@
             processing: true,
             serverSide: true,
             pageLength: 25,
-            ajax: '{!! route('admin.tax.showAjaxList') !!}',
+            ajax: '{!! route('admin.tax.showAjaxList',[get_route_url()]) !!}',
             columns: [
                 { data: 'id', name: 'id'},
                 { data: 'name', name: 'name'},
