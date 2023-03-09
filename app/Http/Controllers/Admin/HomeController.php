@@ -81,8 +81,10 @@ class HomeController extends Controller
     }
 
     function profile(){   
-        $data['title'] = $this->title;      
+        $data['title'] = $this->title;  
+        
         $content['r'] = User::where('id',Auth::id())->where('mid',$this->mid)->first();
+       
        
         return view('admin.profile',$content);
     }

@@ -44,11 +44,15 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->domain = $request->subdomain; 
         $this->mid = $this->dnsloader($request->subdomain); 
+        
         if(!$this->mid){
             return redirect()->to(base_site());
         } 
     }
     
+    function login_form($domain){
+        return view('auth.login');
+    }
     public function login($domain,Request $request) {
         $this->validate($request, [
            'email' => 'required|string|email|max:255',
@@ -66,6 +70,7 @@ class LoginController extends Controller
                'email'  => strtolower($request->input('email')),
                'password'  => $request->input('password'),
                'status' => 1,
+               'mid'=>$this->mid,
            ], $remember
        );
        
@@ -105,6 +110,7 @@ class LoginController extends Controller
                 'email'  => strtolower($request->input('email')),
                 'password'  => $request->input('password'),
                 'status' => 1,
+                'mid'=>$this->mid,
             ]
         );
 

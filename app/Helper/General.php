@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Models\Config;
 use App\Models\BlogCategory;
 use App\Models\Tax;
-use Session;
+use Illuminate\Support\Facades\Session;
 function category_menu(){
     $result = Category::with('category')->where('parent',0)->where('status',1)->get();
     if(!$result->isEmpty()){
@@ -113,16 +113,7 @@ function store_available(){
         return 'not_available';
     }
 }
-function configinfo($fld=''){
-    $config = Config::first();
-    if(!empty($config)){
-        if($fld == ""){
-            return $config;
-        }else{
-            return $config->$fld;
-        }
-    }
-}
+
 
 function latest_product(){
     $latest_product = Product::whereHas('category', function ($query) {
@@ -397,8 +388,21 @@ function dnsinfo($dns='',$fld=''){
     }
 }
 
-function get_route_url($route=''){
-    return Session::get('subdomain');
+function get_route_url(){
+    return session()->get('subdomain');
+}
+
+function configinfo($fld=''){
+    $dns = get_route_url();
+    $user_id = dnsinfo($dns,'id');
+    $config = Config::where('user_id',$user_id)->first();
+    if(!empty($config)){
+        if($fld == ""){
+            return $config;
+        }else{
+            return $config->$fld;
+        }
+    }
 }
 function base_site(){
     return 'https://cybernauticstech-development.com';

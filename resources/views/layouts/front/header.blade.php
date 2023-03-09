@@ -11,8 +11,11 @@
 
                            <div class="logo d-flex">
                               <div class="logo-img mr-4">
+                                 
                                     <a href="/">
-                                       <img src="{{asset('assets/front/images/Gong Cha 1.png')}}" alt="">
+                                       @if( configinfo('logo') !="" )
+                                       <img src="{{asset('uploads/profile/'. configinfo('logo'))}}" alt="">
+                                       @endif
                                     </a>
                               </div>
 

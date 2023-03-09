@@ -74,9 +74,7 @@
                                     </form><!--end form-->
                                 </div><!--end /div-->
                                 
-                                <div class="m-3 text-center text-muted">
-                                    <p class="">Don't have an account ?  <a href="{{ route('register',[get_route_url()]) }}" class="text-primary ml-2">Free Register</a></p>
-                                </div>
+                               
                             </div><!--end card-body-->
                         </div><!--end card-->
                         <div class="account-social text-center mt-4">

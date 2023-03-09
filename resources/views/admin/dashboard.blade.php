@@ -11,11 +11,11 @@
         @slot('item2') Dashboard @endslot
     @endcomponent
 
-    <div class="row mt-5">
+    <div class="row mt-5 d-none">
     @component('components.crm-widget')
         @slot('iconClass') align-self-center icon-lg icon-dual-danger  @endslot
         @slot('title') Pending Orders  @endslot
-        @slot('cost') 90 @endslot
+        @slot('cost') 0 @endslot
         @slot('progressCost') 55 @endslot
         @slot('progressClass') progress-bar bg-danger @endslot
     @endcomponent

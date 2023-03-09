@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Session;
+use Auth;
 
 class Controller extends BaseController
 {
@@ -16,9 +17,14 @@ class Controller extends BaseController
             if(Session::has('subdomain') && Session::get('subdomain') == $subdomain) {
                 return Session::get('mid');
             }else{
+                Auth::logout();
+                Session::flush();
                 $mid =  dnsinfo($subdomain,'mid');
-                Session::put('mid',$mid);
-                Session::put('subdomain',$subdomain);
+                session()->forget('subdomain');
+                session()->forget('mid');
+                session()->put('mid',$mid);
+                session()->put('subdomain',$subdomain);
+                session()->save();
                 return $mid;
             }
         

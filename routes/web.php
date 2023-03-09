@@ -23,9 +23,10 @@ Artisan::call('view:clear');
 Artisan::call('config:clear');
 Auth::routes();
 
+Route::get('login',['as'=>"login",'uses'=>"App\Http\Controllers\Auth\LoginController@login_form"]);
 Route::post('login',['as'=>"login",'uses'=>"App\Http\Controllers\Auth\LoginController@login"]);
 Route::post('register',['as'=>"register",'uses'=>"App\Http\Controllers\Auth\RegisterController@create"]);
-Route::post('front-login',['as'=>"login_front",'uses'=>"Auth\LoginController@login_front"]);
+Route::post('front-login',['as'=>"login_front",'uses'=>"App\Http\Controllers\Auth\LoginController@login_front"]);
 /****Front Routes */
 Route::get('/',['as'=>'home','uses'=>"App\Http\Controllers\HomeController@index"]);
 Route::get('shop',['as'=>'shop','uses'=>'App\Http\Controllers\ShopController@shop']);
@@ -183,9 +184,5 @@ Route::group(['prefix' => 'ajax', 'as' => 'ajax.'], function () {
 });
 Route::get('get-parent-category','App\Http\Controllers\Admin\CategoryController@get_category')->name('get_prent_category');
 
-//Route::group(['domain' => '{subdomain}.cybernauticstech-development.com'], function() {
-//Route::group(['domain' => '{subdomain}.cybernauticstech-development.com'], function() {
-    Route::get('/testdomain','App\Http\Controllers\HomeController@testdomains')->name('testdomains');
-    
-    Route::get('/cstusers/{id}','App\Http\Controllers\HomeController@testdomain')->name('testdomain');
+
 });

@@ -38,10 +38,6 @@ class HomeController extends Controller
         $data['feature']=Product::where('mid',$this->mid)->take(12)->get();   
         return view('front.home',$data)->with('callback',$this);
     }
-    function testdomain($account,$id=0){
-        echo $account; echo $id; die();
-        echo route('testdomain',[$account,'147']); die();
-        echo "MID ".$this->mid; die();
-    }
+    
     
 }
